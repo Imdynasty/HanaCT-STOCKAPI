@@ -1,0 +1,19 @@
+#홈페이지에서 API서비스 신청시 받은 Appkey, Appsecret 값 설정
+#실전투자 (모의투자인 경우 모의투자용 앱키, 앱시크리트 사용)
+my_app: "PS0wv34BlZSlA1FhloPCmnt47TNTfe8xpQUZ"
+my_sec: "YdVvxGBptEbXjnkc8fm58VGy/0rb3in+wa1O6BQXV/zGhFh+Be1641dv2VjgmT2QvVpK7PdcL6mgodw0a86R8jHWkWySlVgeaXEuMcW+QHZG80zm/ZaYXeAlCaYtj+fAo6jIy8uDIlr/YjU76EV988EPJDj0xBSAEbaIefgd+/0CL3fG5HY="
+
+#계좌번호 앞 8자리
+my_acct: "50112746"
+#계좌번호 뒤 2자리
+my_prod: "01"
+
+#실전투자
+#prod: "https://openapi.koreainvestment.com:9443"
+#모의투자
+vps: "https://openapivts.koreainvestment.com:29443"
+
+#디스코드 웹훅 URL
+DISCORD_WEBHOOK_URL: ""
+
+my_agent : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
