@@ -12,7 +12,7 @@ print("Successfully connected to Oracle Database")
 cursor = conn.cursor()
 
 # CSV 파일 경로
-csv_file_path = "/Users/smin/Downloads/TSLA 과거 데이터.csv"
+csv_file_path = "/Users/smin/Downloads/NVDA 과거 데이터.csv"
 
 # 파일의 인코딩을 자동으로 감지
 with open(csv_file_path, 'rb') as file:
@@ -28,13 +28,16 @@ df = pd.read_csv(csv_file_path, encoding=encoding)
 df.columns = ['trading_date', 'close_price', 'open_price', 'high_price', 'low_price', 'volume', 'change_percentage']
 
 # stockcode 컬럼 추가
-df['stockcode'] = 'TSLA'
+df['stockcode'] = 'NVDA'
 
 # 날짜 형식 변환
 df['trading_date'] = pd.to_datetime(df['trading_date'].str.replace(' ', ''), format='%Y-%m-%d')
 
 # 거래량과 변동 %에 있는 쉼표 및 문자 제거 및 변환 처리
-df['volume'] = df['volume'].str.replace('K', '000').str.replace('M', '000000').str.replace(',', '').astype(float)
+df['volume'] = df['volume'].str.replace('B', '000000000')\
+                           .str.replace('M', '000000')\
+                           .str.replace('K', '000')\
+                           .str.replace(',', '').astype(float)
 df['change_percentage'] = df['change_percentage'].str.replace('%', '').astype(float)
 
 # 데이터프레임의 데이터 타입 출력 (디버깅용)
