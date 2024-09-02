@@ -75,7 +75,7 @@ def get_order_cash(ord_dv="", itm_no="", qty=0, unpr=0, tr_cont="", FK100="", NK
 # Output: DataFrame (Option) output API 문서 참조 등
 def get_order_rvsecncl(ord_orgno="", orgn_odno="", ord_dvsn="", rvse_cncl_dvsn_cd="", ord_qty=0, ord_unpr=0, qty_all_ord_yn="", tr_cont="", dataframe=None):  # 국내주식주문 > 주식주문(정정취소)
     url = '/uapi/domestic-stock/v1/trading/order-rvsecncl'
-    tr_id = "TTTC0803U"  # 주식 정정 취소 주문    [모의투자] VTTC0803U : 주식 정정 취소 주문
+    tr_id = "VTTC0803U"  # 주식 정정 취소 주문    [모의투자] VTTC0803U : 주식 정정 취소 주문
 
     if ord_orgno == "":
         print("주문조직번호 확인요망!!!")
