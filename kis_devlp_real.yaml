@@ -1,20 +1,20 @@
 #홈페이지에서 API서비스 신청시 받은 Appkey, Appsecret 값 설정
 #실전투자 (모의투자인 경우 모의투자용 앱키, 앱시크리트 사용)
-my_app: "PS0wv34BlZSlA1FhloPCmnt47TNTfe8xpQUZ"
-my_sec: "YdVvxGBptEbXjnkc8fm58VGy/0rb3in+wa1O6BQXV/zGhFh+Be1641dv2VjgmT2QvVpK7PdcL6mgodw0a86R8jHWkWySlVgeaXEuMcW+QHZG80zm/ZaYXeAlCaYtj+fAo6jIy8uDIlr/YjU76EV988EPJDj0xBSAEbaIefgd+/0CL3fG5HY="
+my_app: "PS4cxU8otRf1QWnFheU8DR4oJI5dsTsFm3RQ"
+my_sec: "V0cnehLYn1BD/rwD7ENK6XDhnLI22wlHkoqG3MBSS94RdKvax9p0BNhFesltNloYYetxQ/Sjlub2NaI7wj3YdGKz72F/gK8ZAD3X6sO2WVMxZrZv15Cw4CYFIY2J7fApqOJc4At8+gwl7i0/ObaCkRibkX29mucIbkdyY9oyS80N2OXD4LQ="
 
 # 실전 app : PS4cxU8otRf1QWnFheU8DR4oJI5dsTsFm3RQ
 # 실전 sec : V0cnehLYn1BD/rwD7ENK6XDhnLI22wlHkoqG3MBSS94RdKvax9p0BNhFesltNloYYetxQ/Sjlub2NaI7wj3YdGKz72F/gK8ZAD3X6sO2WVMxZrZv15Cw4CYFIY2J7fApqOJc4At8+gwl7i0/ObaCkRibkX29mucIbkdyY9oyS80N2OXD4LQ=
 
 #계좌번호 앞 8자리
-my_acct: "50112746"
+my_acct_stock: "64387275"
 #계좌번호 뒤 2자리
 my_prod: "01"
 
 #실전투자
-#prod: "https://openapi.koreainvestment.com:9443"
+prod: "https://openapi.koreainvestment.com:9443"
 #모의투자
-vps: "https://openapivts.koreainvestment.com:29443"
+#vps: "https://openapivts.koreainvestment.com:29443"
 
 #디스코드 웹훅 URL
 DISCORD_WEBHOOK_URL: ""

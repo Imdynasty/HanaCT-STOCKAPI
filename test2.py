@@ -105,19 +105,20 @@ ka.auth()
 # filtered_data2 = rt_Data5[required_columns2]
 # print(filtered_data2)
 
-rt_Data5 = ko.get_overseas_inquire_ccnl(st_dt="20240620",ccld_dv="00")
-required_columns2 = [
-    'ord_dt',                # 주문 날짜
-    'ord_tmd',               # 주문 시간
-    'odno',                  # 주문 번호
-    'sll_buy_dvsn_cd_name',  # 매도/매수 구분 코드 이름
-    'prdt_name',             # 상품 이름 (종목명)
-    'ft_ord_qty',               # 주문 수량
-    'ft_ccld_qty',          # 총 체결 수량
-    'ft_ccld_amt3',          # 총 체결 금액
-    'pdno',                  # 종목 번호 (상품 코드)
-    'ft_ord_unpr3',              # 주문 단가
-    'tr_crcy_cd',         # 통화코드
-]
-filtered_data2 = rt_Data5[required_columns2]
-print(filtered_data2)
+# rt_Data5 = ko.get_overseas_inquire_ccnl(st_dt="20240620",ccld_dv="00")
+# required_columns2 = [
+#     'ord_dt',                # 주문 날짜
+#     'ord_tmd',               # 주문 시간
+#     'odno',                  # 주문 번호
+#     'sll_buy_dvsn_cd_name',  # 매도/매수 구분 코드 이름
+#     'prdt_name',             # 상품 이름 (종목명)
+#     'ft_ord_qty',               # 주문 수량
+#     'ft_ccld_qty',          # 총 체결 수량
+#     'ft_ccld_amt3',          # 총 체결 금액
+#     'pdno',                  # 종목 번호 (상품 코드)
+#     'ft_ord_unpr3',              # 주문 단가
+#     'tr_crcy_cd',         # 통화코드
+# ]
+# filtered_data2 = rt_Data5[required_columns2]
+# print(filtered_data2)
+

@@ -12,7 +12,7 @@ print("Successfully connected to Oracle Database")
 cursor = conn.cursor()
 
 # CSV 파일 경로
-csv_file_path = "/Users/smin/Downloads/000270 과거 데이터.csv"
+csv_file_path = "/Users/smin/Downloads/071050 과거 데이터.csv"
 
 # 파일의 인코딩을 자동으로 감지
 with open(csv_file_path, 'rb') as file:
@@ -28,7 +28,7 @@ df = pd.read_csv(csv_file_path, encoding=encoding)
 df.columns = ['trading_date', 'close_price', 'open_price', 'high_price', 'low_price', 'volume', 'change_percentage']
 
 # stockcode 컬럼 추가 (assuming the stock code is '086790')
-df['stockcode'] = '000270'
+df['stockcode'] = '071050'
 
 # 날짜 형식 변환 (assuming the date format is YYYY-MM-DD in the CSV with spaces)
 df['trading_date'] = pd.to_datetime(df['trading_date'].str.replace(' ', ''), format='%Y-%m-%d')
@@ -47,7 +47,7 @@ print(df.head())
 
 # 데이터 삽입 쿼리
 insert_query = """
-    INSERT INTO SECURITIES_OVERSEAS_STOCKPRICES (
+    INSERT INTO SECURITIES_DOMESTIC_STOCKPRICES (
         stockcode, trading_date, close_price, open_price, high_price, low_price, volume, change_percentage
     ) VALUES (:1, :2, :3, :4, :5, :6, :7, :8)
 """
