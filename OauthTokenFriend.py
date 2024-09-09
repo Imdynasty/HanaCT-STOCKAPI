@@ -1,9 +1,9 @@
 import requests
 
 url = 'https://kauth.kakao.com/oauth/token'
-rest_api_key = 'bae3a57a56671d99d18bb00a44a68829'
+rest_api_key = 'd63a5b8143145db14ba09ae43f903efc'
 redirect_uri = 'https://example.com/oauth'
-authorize_code = 'WxJGyHxk2m1MZLW3mZ-IspbUtvpRctKY9cbe5AtfJGlRutILJwGFEQAAAAQKPCSZAAABkbct3LjDukuslKNZWg' # 친구에게 보내기 받은 인증 코드
+authorize_code = '7G0nkOIJoD5bIEnGrAGoRHRPFEjW1i4aY_IyH9SWEwso2f2PBRGQ6AAAAAQKKiVPAAABkdSYfLKnsOtctwzlGQ' # 친구에게 보내기 받은 인증 코드
 
 data = {
     'grant_type':'authorization_code',

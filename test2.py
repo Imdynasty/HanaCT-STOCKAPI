@@ -1,7 +1,14 @@
 #kis_domstk module 을 찾을 수 없다는 에러가 나는 경우 sys.path에 kis_domstk.py 가 있는 폴더를 추가해준다.
+from flask import Flask, request,jsonify
+from flask_cors import CORS
+import oracledb
 import kis_auth as ka
 import kis_domstk as kb
 import kis_ovrseastk as ko
+from datetime import datetime, timedelta
+import json
+import requests
+import time
 import pandas as pd
 
 # pandas 출력 옵션 설정: 모든 열과 행이 표시되도록
@@ -121,4 +128,32 @@ ka.auth()
 # ]
 # filtered_data2 = rt_Data5[required_columns2]
 # print(filtered_data2)
+# rt_data = kb.get_inquire_ccnl(itm_no="005930")
+# print(rt_data)
 
+today_date = datetime.now().strftime("%Y%m%d")
+
+# 체결 내역 조회
+rt_data_contract = kb.get_inquire_daily_ccld_lst(
+    inqr_strt_dt=today_date,  # 현재 날짜 사용
+    ccld_dvsn="01"
+)
+
+# 필요한 컬럼만 추출
+required_columns_contract = [
+    'ord_dt',  # 주문 날짜
+    'ord_tmd',  # 주문 시간
+    'odno',  # 주문 번호
+    'sll_buy_dvsn_cd_name',  # 매도/매수 구분 코드 이름
+    'prdt_name',  # 상품 이름 (종목명)
+    'ord_qty',  # 주문 수량
+    'tot_ccld_qty',  # 총 체결 수량
+    'tot_ccld_amt',  # 총 체결 금액
+    'pdno',  # 종목 번호 (상품 코드)
+    'ord_unpr',  # 주문 단가
+    'avg_prvs',  # 평균 이전 가격
+    'ccld_cndt_name'  # 체결 조건 가격
+]
+
+filtered_data_contract = rt_data_contract[required_columns_contract]
+print(filtered_data_contract)

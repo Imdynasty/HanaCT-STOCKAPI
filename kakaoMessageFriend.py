@@ -43,7 +43,7 @@ if friends_list:
             {
                 "title": "주식매도",
                 "description": "매도 확인",
-                "image_url": "https://via.placeholder.com/800x400.png?text=Item+2",  # 예제 이미지 URL
+                "image_url": "https://github.com/Imdynasty/HanaCT-KoreaLogo/blob/main/%E1%84%82%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A7%E1%86%B8.png",  # 예제 이미지 URL
                 "link": {
                     "web_url": "https://www.google.com",
                     "mobile_web_url": "https://m.google.com"
