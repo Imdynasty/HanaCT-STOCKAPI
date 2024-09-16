@@ -317,7 +317,7 @@ def place_overseas_order():
         itm_no = data.get('itm_no', '')
         qty = data.get('qty', 0)
         unpr = data.get('unpr', 0)
-        # print(f"Received exchange code: {excg_cd}")
+
         # 해외 주식 주문 실행
         order_result = ko.get_overseas_order(
             ord_dv=ord_dv,
@@ -329,12 +329,136 @@ def place_overseas_order():
 
         # 주문 결과 확인
         if order_result is not None:
-            return jsonify({"status": "success", "data": order_result.to_dict(orient='records')})
+            time.sleep(5)  # 잠시 대기
+
+            # 현재 날짜를 "YYYYMMDD" 형식으로 가져옴
+            today_date = datetime.now().strftime("%Y%m%d")
+
+            # 체결 내역 조회
+            rt_data_contract = ko.get_overseas_inquire_ccnl(
+                st_dt=today_date,  # 현재 날짜 사용
+                ccld_dv="00"
+            )
+
+            # 필요한 열 확인
+            required_columns2 = [
+                'ord_dt',               # 주문 날짜
+                'ord_tmd',              # 주문 시간
+                'odno',                 # 주문 번호
+                'sll_buy_dvsn_cd_name', # 매도/매수 구분 코드 이름
+                'prdt_name',            # 상품 이름 (종목명)
+                'ft_ord_qty',           # 주문 수량
+                'ft_ccld_qty',          # 총 체결 수량
+                'ft_ccld_amt3',         # 총 체결 금액
+                'pdno',                 # 종목 번호 (상품 코드)
+                'ft_ord_unpr3',         # 주문 단가
+                'tr_crcy_cd'            # 통화코드
+            ]
+            missing_columns = [col for col in required_columns2 if col not in rt_data_contract.columns]
+            if missing_columns:
+                print(f"누락된 컬럼: {missing_columns}")
+                return jsonify({"status": "error", "message": f"Missing columns: {', '.join(missing_columns)}"}), 400
+
+            filtered_contracts = rt_data_contract[required_columns2]
+
+            # 현재 시간 ±3분 범위 계산
+            current_time = datetime.now()
+            time_window_start = current_time - timedelta(minutes=3)
+            time_window_end = current_time + timedelta(minutes=3)
+
+            filtered_contracts = filtered_contracts.copy()
+            filtered_contracts.loc[:, 'converted_ord_tmd'] = pd.to_datetime(
+                filtered_contracts['ord_tmd'].apply(
+                    lambda x: datetime.combine(current_time.date(), datetime.strptime(x, '%H%M%S').time()))
+            )
+
+            relevant_contracts = filtered_contracts[
+                (filtered_contracts['converted_ord_tmd'] >= time_window_start) &
+                (filtered_contracts['converted_ord_tmd'] <= time_window_end)
+            ]
+
+            print("Relevant contracts:", relevant_contracts)
+
+            # 카카오 메시지 전송 로직
+            if not relevant_contracts.empty:
+                send_kakao_overseas_message(relevant_contracts)
+
+            return jsonify({"status": "success", "data": filtered_contracts.to_dict(orient='records')})
         else:
             return jsonify({"status": "error", "message": "Order failed"}), 400
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+def send_kakao_overseas_message(contracts):
+    with open(r"/Users/240729after다운로드/kakao_code_friend2.json", "r") as fp:
+        tokens = json.load(fp)
+
+    headers = {
+        "Authorization": "Bearer " + tokens["access_token"],
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    url = "https://kapi.kakao.com/v1/api/talk/friends"
+    result = requests.get(url, headers=headers).json()
+    friends_list = result.get("elements")
+    print("친구 목록:", friends_list)
+
+    if friends_list:
+        friend_id = friends_list[0].get("uuid")
+        print("첫 번째 친구의 UUID:", friend_id)
+        receiver_uuids = [friend_id]
+        url = "https://kapi.kakao.com/v1/api/talk/friends/message/default/send"
+
+        # contracts 데이터에서 필요한 정보를 가져와 contents에 추가
+        contents = []
+        for _, row in contracts.iterrows():
+            sll_buy_dvsn_cd_name = row['sll_buy_dvsn_cd_name']
+            prdt_name = row['prdt_name']
+            tot_ccld_qty = row['ft_ccld_qty']
+            tot_ccld_amt = row['ft_ccld_amt3']
+            ord_dt = row['ord_dt']
+            ord_tmd = row['ord_tmd']
+            ord_tmd_formatted = f"{ord_tmd[:2]}:{ord_tmd[2:4]}:{ord_tmd[4:]}"
+            tr_crcy_cd = row['tr_crcy_cd']
+            contents.append({
+                "title": f"[전량체결통보안내]: {sll_buy_dvsn_cd_name}체결 | 종목명: {prdt_name}",
+                "description": f"수량: {tot_ccld_qty}, 체결가: {tot_ccld_amt} {tr_crcy_cd}, 처리일자: {ord_dt}, 주문시간: {ord_tmd_formatted}",
+                "link": {
+                    "web_url": "https://www.naver.com",
+                    "mobile_web_url": "https://m.naver.com"
+                }
+            })
+
+        # 'feed' 형식의 템플릿 메시지를 여러 번 반복
+        template_object = {
+            "object_type": "feed",
+            "content": contents[0],  # 첫 번째 내용
+            "buttons": [
+                {
+                    "title": "자세히 보기",
+                    "link": {
+                        "web_url": "https://www.naver.com",
+                        "mobile_web_url": "https://m.naver.com"
+                    }
+                }
+            ]
+        }
+
+        data = {
+            'receiver_uuids': json.dumps(receiver_uuids),
+            "template_object": json.dumps(template_object, ensure_ascii=False)
+        }
+
+        response = requests.post(url, headers=headers, data=data)
+
+        response_data = response.json()
+        if response.status_code == 200 and 'successful_receiver_uuids' in response_data:
+            print(f"친구에게 템플릿 메시지 전송 성공. UUID: {response_data['successful_receiver_uuids']}")
+        else:
+            print('친구에게 템플릿 메시지 전송 실패. Error: ' + str(response_data))
+    else:
+        print("메시지를 보낼 친구가 없습니다.")
 
 
 @app.route('/update_domestic_balance_summary', methods=['POST'])
